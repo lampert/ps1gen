@@ -29,6 +29,9 @@
 # *   -bash: xyz: command not found
 # *   ~127$ 
 # 
+# Source
+# * git@github.com:lampert/ps1gen.git
+#
 # Enjoy.
 # * -Paul Lampert
 

@@ -10,8 +10,18 @@
 # * Add this to .profile, .bashrc and/or .kshrc:
 # *  . ps1gen.sh               # install functions
 # *  export PS1="\`ps1gen\`"   # use ps1gen function to generate prompt
+#
+# Customize:
+# * Set any of these variables in .profile before ps1gen.sh to customize:
+# *  PS1GEN_EXIT_STATUS_COLOR=196    # red
+# *  PS1GEN_GIT_BRANCH_COLOR=10      # green
+# *  PS1GEN_GIT_TAG_COLOR=11         # yellow
+# *  PS1GEN_GIT_INCLUDE_HOME=0       # 1=show git branch in $HOME directory
+# *  PS1GEN_CWD_COLOR=7              # white
+# *  PS1GEN_TEXT_COLOR=208           # amber
+# *  PS1GEN_PROMPT="$ "              # default prompt, $
 # 
-# Examples:
+# Sample output:
 # * Git repo branch:
 # *   ~/src/vim{master}$ 
 # * Non-zero exit status:
@@ -21,15 +31,6 @@
 # 
 # Enjoy.
 # * -Paul Lampert
-
-# Set any of these variables in .profile before ps1gen.sh to customize:
-#  PS1GEN_EXIT_STATUS_COLOR=196    # red
-#  PS1GEN_GIT_BRANCH_COLOR=10      # green
-#  PS1GEN_GIT_TAG_COLOR=11         # yellow
-#  PS1GEN_GIT_INCLUDE_HOME=0       # 1=show git branch in $HOME directory
-#  PS1GEN_CWD_COLOR=7              # white
-#  PS1GEN_TEXT_COLOR=208           # amber
-#  PS1GEN_PROMPT="$ "              # default prompt, $
 
 function ps1gen
 {

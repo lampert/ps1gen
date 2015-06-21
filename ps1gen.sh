@@ -33,7 +33,7 @@
 # * git@github.com:lampert/ps1gen.git
 #
 # Enjoy.
-# * -Paul Lampert
+# * -Paul Lampert 6/2015
 
 function ps1gen
 {

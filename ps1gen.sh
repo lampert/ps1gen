@@ -35,13 +35,37 @@
 # Enjoy.
 # * -Paul Lampert 6/2015
 
-function ps1gen
+export PS1GEN_EXIT_STATUS_COLOR_t="`tput setaf ${PS1GEN_EXIT_STATUS_COLOR:-196}`"
+export PS1GEN_GIT_BRANCH_COLOR_t="`tput setaf ${PS1GEN_GIT_BRANCH_COLOR:-10}`"
+export PS1GEN_GIT_TAG_COLOR_t="`tput setaf ${PS1GEN_GIT_TAG_COLOR:-11}`"
+export PS1GEN_CWD_COLOR_t="`tput setaf ${PS1GEN_CWD_COLOR:-7}`"
+export PS1GEN_TEXT_COLOR_t="`tput setaf ${PS1GEN_TEXT_COLOR:-208}`"
+
+ps1gen()
 {
     typeset rc=$?
+    #set up colors if necessary
+    if [[ -z "$PS1GEN_EXIT_STATUS_COLOR_t" ]]; then
+        echo >&2 "**SET UP COLORS**"
+#        if [[ ! -x `tput` ]]; then
+#            echo >&2 "no tput, using default"
+#            export PS1GEN_EXIT_STATUS_COLOR_t="[38;5;${PS1GEN_EXIT_STATUS_COLOR:-196}m"
+#            export PS1GEN_GIT_BRANCH_COLOR_t="[38;5;${PS1GEN_GIT_BRANCH_COLOR:-10}m"
+#            export PS1GEN_GIT_TAG_COLOR_t="[38;5;${PS1GEN_GIT_TAG_COLOR:-11}m"
+#            export PS1GEN_CWD_COLOR_t="[38;5;${PS1GEN_CWD_COLOR:-7}m"
+#            export PS1GEN_TEXT_COLOR_t="[38;5;${PS1GEN_TEXT_COLOR:-208}m"
+#        else
+            export PS1GEN_EXIT_STATUS_COLOR_t="`tput setaf ${PS1GEN_EXIT_STATUS_COLOR:-196}`"
+            export PS1GEN_GIT_BRANCH_COLOR_t="`tput setaf ${PS1GEN_GIT_BRANCH_COLOR:-10}`"
+            export PS1GEN_GIT_TAG_COLOR_t="`tput setaf ${PS1GEN_GIT_TAG_COLOR:-11}`"
+            export PS1GEN_CWD_COLOR_t="`tput setaf ${PS1GEN_CWD_COLOR:-7}`"
+            export PS1GEN_TEXT_COLOR_t="`tput setaf ${PS1GEN_TEXT_COLOR:-208}`"
+#        fi
+    fi
     if [[ $rc -eq 0 ]]; then
         typeset r=
     else
-        typeset r="`ps1gen_set_fg ${PS1GEN_EXIT_STATUS_COLOR:-196}`$rc"
+        typeset r="$PS1GEN_EXIT_STATUS_COLOR_t$rc"
     fi
     typeset b=
     typeset branch=
@@ -61,17 +85,17 @@ function ps1gen
             read branch < $dir/.git/HEAD
             if [[ $branch = ref:* ]];then
                 branch=${branch##*/}
-                b="`ps1gen_set_fg ${PS1GEN_GIT_BRANCH_COLOR:-10}`{$branch}"
+                b="$PS1GEN_GIT_BRANCH_COLOR_t{$branch}"
                 if [[ ${PS1GEN_GIT_INCLUDE_HOME:-0} -eq 0 ]]; then
                   if [[ $branch = master ]]; then
                       if [[ $HOME/.git/config -ef $dir/.git/config ]]
                       then
-                          unset b # don't show master branch, when in home dir
+                          unset b # dont show master branch, when in home dir
                       fi
                   fi
                 fi
             else
-                b="`ps1gen_set_fg ${PS1GEN_GIT_BRANCH_COLOR:-10}`{$branch}"
+                b="$PS1GEN_GIT_BRANCH_COLOR_t{$branch}"
                 # check for tags
                 tdir=$dir/.git/refs/tags
                 ls -t $tdir | while read tagfiles
@@ -79,7 +103,7 @@ function ps1gen
                     read tag < $tdir/$tagfiles
                     if [[ $branch = $tag ]];then
                         branch="tag: $tagfiles"
-                        b="`ps1gen_set_fg ${PS1GEN_GIT_TAG_COLOR:-11}`{$branch}"
+                        b="$PS1GEN_GIT_TAG_COLOR_t{$branch}"
                         break
                     fi
                 done
@@ -94,10 +118,5 @@ function ps1gen
     if [[ $p = ${HOME} || $p = ${HOME}/* ]];then
         p="~${p##$HOME}"
     fi
-    echo "`ps1gen_set_fg ${PS1GEN_CWD_COLOR:-7}`$p$b$r`ps1gen_set_fg ${PS1GEN_TEXT_COLOR:-208}`${PS1GEN_PROMPT:-\$ }"
-}
-
-ps1gen_set_fg()
-{
-    printf "\e[38;5;${1}m"
+    echo "$PS1GEN_CWD_COLOR_t$p$b$r$PS1GEN_TEXT_COLOR_t${PS1GEN_PROMPT:-\$ }"
 }

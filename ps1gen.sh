@@ -32,6 +32,9 @@
 # Source
 # * git@github.com:lampert/ps1gen.git
 #
+# Notes
+# * requires TERM set to something that can support 256 color, by default, like xterm-256color
+#
 # Enjoy.
 # * -Paul Lampert 6/2015
 
@@ -41,27 +44,9 @@ export PS1GEN_GIT_TAG_COLOR_t="`tput setaf ${PS1GEN_GIT_TAG_COLOR:-11}`"
 export PS1GEN_CWD_COLOR_t="`tput setaf ${PS1GEN_CWD_COLOR:-7}`"
 export PS1GEN_TEXT_COLOR_t="`tput setaf ${PS1GEN_TEXT_COLOR:-208}`"
 
-ps1gen()
+function ps1gen
 {
     typeset rc=$?
-    #set up colors if necessary
-    if [[ -z "$PS1GEN_EXIT_STATUS_COLOR_t" ]]; then
-        echo >&2 "**SET UP COLORS**"
-#        if [[ ! -x `tput` ]]; then
-#            echo >&2 "no tput, using default"
-#            export PS1GEN_EXIT_STATUS_COLOR_t="[38;5;${PS1GEN_EXIT_STATUS_COLOR:-196}m"
-#            export PS1GEN_GIT_BRANCH_COLOR_t="[38;5;${PS1GEN_GIT_BRANCH_COLOR:-10}m"
-#            export PS1GEN_GIT_TAG_COLOR_t="[38;5;${PS1GEN_GIT_TAG_COLOR:-11}m"
-#            export PS1GEN_CWD_COLOR_t="[38;5;${PS1GEN_CWD_COLOR:-7}m"
-#            export PS1GEN_TEXT_COLOR_t="[38;5;${PS1GEN_TEXT_COLOR:-208}m"
-#        else
-            export PS1GEN_EXIT_STATUS_COLOR_t="`tput setaf ${PS1GEN_EXIT_STATUS_COLOR:-196}`"
-            export PS1GEN_GIT_BRANCH_COLOR_t="`tput setaf ${PS1GEN_GIT_BRANCH_COLOR:-10}`"
-            export PS1GEN_GIT_TAG_COLOR_t="`tput setaf ${PS1GEN_GIT_TAG_COLOR:-11}`"
-            export PS1GEN_CWD_COLOR_t="`tput setaf ${PS1GEN_CWD_COLOR:-7}`"
-            export PS1GEN_TEXT_COLOR_t="`tput setaf ${PS1GEN_TEXT_COLOR:-208}`"
-#        fi
-    fi
     if [[ $rc -eq 0 ]]; then
         typeset r=
     else

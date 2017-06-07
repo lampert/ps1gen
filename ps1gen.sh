@@ -67,7 +67,7 @@ function ps1gen
         fi
         if [[ -d $dir/.git ]];then
             # found!
-            read branch < $dir/.git/HEAD
+            read branch < $dir/.git/HEAD > /dev/null
             if [[ $branch = ref:* ]];then
                 branch=${branch##*/}
                 b="$PS1GEN_GIT_BRANCH_COLOR_t{$branch}"
@@ -85,7 +85,7 @@ function ps1gen
                 tdir=$dir/.git/refs/tags
                 ls -t $tdir | while read tagfiles
                 do
-                    read tag < $tdir/$tagfiles
+                    read tag < $tdir/$tagfiles > /dev/null
                     if [[ $branch = $tag ]];then
                         branch="tag: $tagfiles"
                         b="$PS1GEN_GIT_TAG_COLOR_t{$branch}"

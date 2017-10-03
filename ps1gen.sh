@@ -65,7 +65,7 @@ function ps1gen
             echo >&2 "ps1gen: too many levels $its"
             break
         fi
-        if [[ -d $dir/.git ]];then
+        if [[ -f $dir/.git/HEAD ]];then
             # found!
             read branch < $dir/.git/HEAD > /dev/null
             if [[ $branch = ref:* ]];then

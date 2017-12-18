@@ -80,6 +80,18 @@ function ps1gen
                   fi
                 fi
             else
+                # scan heads, remotes, 
+                for remotes in                      \
+                    $dir/.git/refs/heads/*          \
+                    $dir/.git/refs/remotes/*/*      \
+                    $dir/.git/refs/tags/*
+                do
+                    read sha < $remotes
+                    if [[ $sha = $branch ]]; then
+                        branch=${remotes##*/.git/refs/@(heads|remotes|tags)/}
+                        break
+                    fi
+                done
                 b="$PS1GEN_GIT_BRANCH_COLOR_t{$branch}"
                 # check for tags
                 tdir=$dir/.git/refs/tags

@@ -88,7 +88,7 @@ function ps1gen
                 do
                     read sha < $remotes
                     if [[ $sha = $branch ]]; then
-                        branch=${remotes##*/.git/refs/@(heads|remotes|tags)/}
+                        branch=${remotes##*/.git/refs/?(heads/|remotes/)}
                         break
                     fi
                 done

@@ -55,9 +55,7 @@ function ps1gen
     typeset b=
     typeset branch=
     # find .git dir
-    typeset lastinode=-1
     typeset dir="$PWD"
-    typeset b=
     typeset its=0
     while true;do
         its=$((its+1))

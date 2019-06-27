@@ -84,6 +84,7 @@ function ps1gen
                     $dir/.git/refs/remotes/*/*      \
                     $dir/.git/refs/tags/*
                 do
+                    [[ ! -f $remotes ]] && continue #skip if nothing in dir
                     read sha < $remotes
                     if [[ $sha = $branch ]]; then
                         branch=${remotes##*/.git/refs/?(heads/|remotes/)}

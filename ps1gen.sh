@@ -67,7 +67,7 @@ function ps1gen
             # found!
             read branch < $dir/.git/HEAD > /dev/null
             if [[ $branch = ref:* ]];then
-                branch=${branch##*/}
+                branch=${branch##ref: refs/?(heads/|remotes/)}
                 b="$PS1GEN_GIT_BRANCH_COLOR_t{$branch}"
                 if [[ ${PS1GEN_GIT_INCLUDE_HOME:-0} -eq 0 ]]; then
                   if [[ $branch = master ]]; then
@@ -79,30 +79,33 @@ function ps1gen
                 fi
             else
                 # scan heads, remotes, 
-                for remotes in                      \
-                    $dir/.git/refs/heads/*          \
-                    $dir/.git/refs/remotes/*/*      \
-                    $dir/.git/refs/tags/*
+                typeset sha=
+                typeset name=
+                (
+                    #output all refs
+                    for name in                      \
+                        $dir/.git/refs/heads/*       \
+                        $dir/.git/refs/remotes/*/*   \
+                        $dir/.git/refs/tags/*
+                    do
+                        [[ name = *\* ]] && continue #skip if nothing in dir
+                        read sha < $name
+                        echo $sha $name
+                    done
+                    egrep -v '^#' $dir/.git/packed-refs 2>/dev/null # skip comments, emit packed refs
+                ) |
+                while read sha name
                 do
-                    [[ ! -f $remotes ]] && continue #skip if nothing in dir
-                    read sha < $remotes
                     if [[ $sha = $branch ]]; then
-                        branch=${remotes##*/.git/refs/?(heads/|remotes/)}
+                        branch=${name##*refs/?(heads/|remotes/)}
                         break
                     fi
                 done
-                b="$PS1GEN_GIT_BRANCH_COLOR_t{$branch}"
-                # check for tags
-                tdir=$dir/.git/refs/tags
-                ls -t $tdir | while read tagfiles
-                do
-                    read tag < $tdir/$tagfiles > /dev/null
-                    if [[ $branch = $tag ]];then
-                        branch="tag: $tagfiles"
-                        b="$PS1GEN_GIT_TAG_COLOR_t{$branch}"
-                        break
-                    fi
-                done
+                if [[ $name = */tags/* ]]; then
+                    b="$PS1GEN_GIT_TAG_COLOR_t{$branch}"
+                else
+                    b="$PS1GEN_GIT_BRANCH_COLOR_t{$branch}"
+                fi
             fi
             break
         fi

@@ -88,7 +88,7 @@ function ps1gen
                         $dir/.git/refs/remotes/*/*   \
                         $dir/.git/refs/tags/*
                     do
-                        [[ name = *\* ]] && continue #skip if nothing in dir
+                        [[ $name = *\* ]] && continue #skip if nothing in dir
                         read sha < $name
                         echo $sha $name
                     done

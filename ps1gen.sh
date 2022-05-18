@@ -81,19 +81,7 @@ function ps1gen
                 # scan heads, remotes, 
                 typeset sha=
                 typeset name=
-                (
-                    #output all refs
-                    for name in                      \
-                        $dir/.git/refs/heads/*       \
-                        $dir/.git/refs/remotes/*/*   \
-                        $dir/.git/refs/tags/*
-                    do
-                        [[ $name = *\* ]] && continue #skip if nothing in dir
-                        read sha < $name
-                        echo $sha $name
-                    done
-                    egrep -v '^#' $dir/.git/packed-refs 2>/dev/null # skip comments, emit packed refs
-                ) |
+                git show-ref |
                 while read sha name
                 do
                     if [[ $sha = $branch ]]; then

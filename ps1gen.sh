@@ -58,8 +58,8 @@ function ps1gen
     typeset dir="$PWD"
     typeset its=0
     while true;do
-        its=$((its+1))
-        if [[ $its -gt 50 ]]; then
+        (( its++ ))
+        if (( its>50 )); then
             echo >&2 "ps1gen: too many levels $its"
             break
         fi
@@ -70,19 +70,18 @@ function ps1gen
                 branch=${branch##ref: refs/?(heads/|remotes/)}
                 b="$PS1GEN_GIT_BRANCH_COLOR_t{$branch}"
                 if [[ ${PS1GEN_GIT_INCLUDE_HOME:-0} -eq 0 ]]; then
-                  if [[ $branch = master ]]; then
-                      if [[ $HOME/.git/config -ef $dir/.git/config ]]
-                      then
-                          unset b # dont show master branch, when in home dir
-                      fi
-                  fi
+                    if [[ $branch = @(master|main) ]]; then
+                        if [[ $HOME/.git/config -ef $dir/.git/config ]]
+                        then
+                            b= # dont show master branch, when in home dir
+                        fi
+                    fi
                 fi
             else
                 # scan heads, remotes, 
                 typeset sha=
                 typeset name=
-                git show-ref |
-                while read sha name
+                git show-ref | while read sha name
                 do
                     if [[ $sha = $branch ]]; then
                         branch=${name##*refs/?(heads/|remotes/)}
